@@ -7,7 +7,10 @@ import CreateMarketModal from '@/components/CreateMarketModal';
 import MarketCard from '@/components/MarketCard';
 import Logo from '@/components/Logo';
 import Footer from '@/components/Footer';
+import LoadingScreen from '@/components/LoadingScreen';
+import AnimatedCounter from '@/components/AnimatedCounter';
 import { Market } from '@/types';
+import { getStats, formatVolume, formatNumber } from '@/lib/stats';
 
 const INITIAL_MARKETS: Market[] = [
   {
@@ -99,16 +102,46 @@ const INITIAL_MARKETS: Market[] = [
 export default function Home() {
   const { connected } = useWallet();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [markets, setMarkets] = useState<Market[]>(INITIAL_MARKETS);
+  const [markets, setMarkets] = useState<Market[]>([]);
+  const [showLoading, setShowLoading] = useState(true);
+  const [stats, setStats] = useState({ totalVolume: 0, activeMarkets: 0, totalTraders: 100 });
 
   useEffect(() => {
-    // Load markets from localStorage
-    const stored = localStorage.getItem('markets');
-    if (stored) {
-      const storedMarkets = JSON.parse(stored);
-      setMarkets([...INITIAL_MARKETS, ...storedMarkets]);
+    // Check if user has visited before
+    const hasVisited = localStorage.getItem('hasVisited');
+    if (hasVisited) {
+      setShowLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    // Load all markets (initial + user-created)
+    const stored = localStorage.getItem('markets');
+    const userMarkets = stored ? JSON.parse(stored) : [];
+    const allMarkets = [...INITIAL_MARKETS, ...userMarkets];
+    setMarkets(allMarkets);
+
+    // Calculate real stats
+    const currentStats = getStats(allMarkets);
+    setStats(currentStats);
+
+    // Update traders count every 30 seconds
+    const interval = setInterval(() => {
+      const updatedStats = getStats(allMarkets);
+      setStats(updatedStats);
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleEnterSite = () => {
+    localStorage.setItem('hasVisited', 'true');
+    setShowLoading(false);
+  };
+
+  if (showLoading) {
+    return <LoadingScreen onEnter={handleEnterSite} />;
+  }
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white relative">
@@ -122,8 +155,14 @@ export default function Home() {
 
       {/* Content */}
       <div className="relative z-10">
-        {/* Header */}
-        <header className="border-b border-[#1f1f28] bg-[#13131a]/80 backdrop-blur-xl sticky top-0 z-50 shadow-lg shadow-black/5">
+        {/* Header - Glossy Glass Effect */}
+        <header className="border-b border-white/10 bg-gradient-to-b from-[#13131a]/60 to-[#13131a]/40 backdrop-blur-2xl sticky top-0 z-50 shadow-2xl shadow-black/20"
+          style={{
+            background: 'linear-gradient(to bottom, rgba(19, 19, 26, 0.8), rgba(19, 19, 26, 0.6))',
+            backdropFilter: 'blur(20px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+          }}
+        >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
@@ -159,12 +198,14 @@ export default function Home() {
             Bet on anime releases, manga developments, and industry events with real-time odds
           </p>
 
-          {/* Stats Bar */}
+          {/* Stats Bar - Real Data with Animated Counters */}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-8 text-sm">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
               <span className="text-gray-400">
-                <span className="text-white font-semibold">{markets.length}</span> Active Markets
+                <span className="text-white font-semibold">
+                  <AnimatedCounter value={stats.activeMarkets} />
+                </span> Active Markets
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -172,7 +213,9 @@ export default function Home() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
               </svg>
               <span className="text-gray-400">
-                <span className="text-white font-semibold">$784K</span> Total Volume
+                <span className="text-white font-semibold">
+                  <AnimatedCounter value={formatVolume(stats.totalVolume)} />
+                </span> Total Volume
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -180,7 +223,9 @@ export default function Home() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
               <span className="text-gray-400">
-                <span className="text-white font-semibold">1.2K+</span> Traders
+                <span className="text-white font-semibold">
+                  <AnimatedCounter value={formatNumber(stats.totalTraders)} />
+                </span> Traders
               </span>
             </div>
           </div>
