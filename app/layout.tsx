@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { SolanaWalletProvider } from "@/components/WalletProvider";
+import ClientWalletProvider from "@/components/ClientWalletProvider";
 
 export const metadata: Metadata = {
   title: "Anime Market - Prediction Markets for Anime & Manga",
@@ -15,9 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased bg-gray-950">
-        <SolanaWalletProvider>
+        <ClientWalletProvider>
           {children}
-        </SolanaWalletProvider>
+        </ClientWalletProvider>
       </body>
     </html>
   );
