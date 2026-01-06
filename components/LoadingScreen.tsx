@@ -30,35 +30,38 @@ export default function LoadingScreen({ onEnter }: LoadingScreenProps) {
             })
             .join('');
           setDisplayText(glitched);
-        }, 50);
+        }, 30);
 
         setTimeout(() => {
           clearInterval(glitchInterval);
           setDisplayText(targetText.slice(0, currentIndex + 1));
           currentIndex++;
           if (currentIndex <= targetText.length) {
-            setTimeout(animateText, 100);
+            setTimeout(animateText, 50);
           }
-        }, 150);
+        }, 80);
       }
     };
 
-    setTimeout(animateText, 500);
+    setTimeout(animateText, 300);
 
     return () => clearInterval(glitchInterval);
   }, []);
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black">
-      {/* Animated Background */}
-      <div
-        className="absolute inset-0 opacity-40"
-        style={{
-          backgroundImage: 'url(https://cdn.prod.website-files.com/69082c5061a39922df8ed3b6/695d1596da585e682dac44b5_landingbg%20(1).gif)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      />
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black overflow-hidden">
+      {/* Animated Background - Full Screen GIF */}
+      <div className="absolute inset-0">
+        <img
+          src="https://cdn.prod.website-files.com/69082c5061a39922df8ed3b6/695d1596da585e682dac44b5_landingbg%20(1).gif"
+          alt="Background"
+          className="w-full h-full object-cover opacity-50"
+          style={{
+            minWidth: '100%',
+            minHeight: '100%',
+          }}
+        />
+      </div>
 
       {/* Overlay gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/80" />
