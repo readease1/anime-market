@@ -49,8 +49,8 @@ export default function CreateMarketModal({ isOpen, onClose }: CreateMarketModal
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-      <div className="bg-gray-900 border border-gray-700 rounded-lg max-w-2xl w-full p-6">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
+      <div className="bg-gradient-to-b from-[#16161f] to-[#13131a] border border-[#1f1f28] rounded-2xl max-w-2xl w-full p-8 shadow-2xl shadow-black/50 animate-in zoom-in-95 duration-200">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-white">Create Market</h2>
           <button

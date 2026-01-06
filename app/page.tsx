@@ -6,6 +6,7 @@ import WalletButton from '@/components/WalletButton';
 import CreateMarketModal from '@/components/CreateMarketModal';
 import MarketCard from '@/components/MarketCard';
 import Logo from '@/components/Logo';
+import Footer from '@/components/Footer';
 import { Market } from '@/types';
 
 const INITIAL_MARKETS: Market[] = [
@@ -110,9 +111,19 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white">
-      {/* Header */}
-      <header className="border-b border-[#1f1f28] bg-[#13131a]/80 backdrop-blur-xl sticky top-0 z-50 shadow-lg shadow-black/5">
+    <div className="min-h-screen bg-[#0a0a0f] text-white relative">
+      {/* Animated Background Pattern */}
+      <div className="fixed inset-0 z-0 opacity-30">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(99, 102, 241, 0.05) 1px, transparent 0)`,
+          backgroundSize: '40px 40px'
+        }}></div>
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10">
+        {/* Header */}
+        <header className="border-b border-[#1f1f28] bg-[#13131a]/80 backdrop-blur-xl sticky top-0 z-50 shadow-lg shadow-black/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
@@ -205,8 +216,12 @@ export default function Home() {
         )}
       </main>
 
-      {/* Create Market Modal */}
-      <CreateMarketModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+        {/* Footer */}
+        <Footer />
+
+        {/* Create Market Modal */}
+        <CreateMarketModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      </div>
     </div>
   );
 }

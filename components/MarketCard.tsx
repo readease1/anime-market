@@ -24,7 +24,7 @@ export default function MarketCard({ market }: MarketCardProps) {
 
   return (
     <Link href={`/market/${market.id}`}>
-      <div className="card-shine group relative bg-gradient-to-b from-[#16161f] to-[#13131a] border border-[#1f1f28] rounded-xl overflow-hidden hover:border-indigo-500/30 transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/10 cursor-pointer h-full flex flex-col">
+      <div className="card-shine group relative bg-gradient-to-b from-[#16161f] to-[#13131a] border border-[#1f1f28] rounded-2xl overflow-hidden hover:border-indigo-500/40 transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/20 cursor-pointer h-full flex flex-col hover:-translate-y-1">
         {/* Image Section */}
         {market.imageUrl && (
           <div className="relative aspect-video w-full overflow-hidden bg-gradient-to-br from-gray-900 to-black">
